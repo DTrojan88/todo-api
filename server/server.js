@@ -38,6 +38,6 @@ app.get('/todos', (req,res) => {
 
 app.listen(activePort, () => {
   console.log('Started on port', activePort);
-})
+});
 
 module.exports = {app};
