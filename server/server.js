@@ -60,7 +60,7 @@ app.get('/todos/:id', (req, res) => {
           }
     res.send(todo);
   }, (e) => {
-    res.status(404).send()
+    res.status(400).send()
   });
 
   //validate id -- if not found respond with code 404
