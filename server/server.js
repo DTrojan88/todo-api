@@ -1,11 +1,12 @@
 //library imports
 var express = require('express');
 var bodyParser = require('body-parser');
+var {ObjectID} = require('mongodb');
 
 //local imports
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
-var {User} = require('./models/user');
+
 
 var app = express();
 //middleware
@@ -34,6 +35,35 @@ app.get('/todos', (req,res) => {
   }, (e) => {
     res.status(400).send(e);
   });
+});
+
+//GET /todos/123456
+app.get('/todos/:id', (req, res) => {
+  var id = req.params.id;
+
+  // if(!ObjectID.isValid(id)) {
+  //   console.log('Id not valid');
+  // } else {
+  //   Todo.findById(id).then((todo) => {
+  //     if(!todo) {
+  //       return console.log('Todo not found!');
+  //     } console.log('Todo:', JSON.stringify(todo, undefined, 2));
+  //   }).catch((e) => console.log(e));
+  // }
+
+  if(!ObjectID.isValid(id)) {
+    res.status(404).send('Id Invalid');
+  }
+  Todo.findById(id).then((todo) => {
+    if(!todo) {
+      return res.status(404).send('Id not found');
+          }
+    res.send(todo);
+  }, (e) => {
+    res.status(404).send()
+  });
+
+  //validate id -- if not found respond with code 404
 });
 
 app.listen(activePort, () => {
