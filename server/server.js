@@ -13,7 +13,7 @@ var app = express();
 app.use(bodyParser.json());
 
 //active port
-var activePort = 3000;
+const activePort = process.env.PORT || 3000;
 
 //post route
 app.post('/todos', (req, res) => {
