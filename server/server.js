@@ -28,7 +28,7 @@ app.post('/todos', (req, res) => {
   });
 });
 
-//get route
+//GET route
 app.get('/todos', (req,res) => {
   Todo.find().then((todos) => {
     res.send({todos});
@@ -41,16 +41,6 @@ app.get('/todos', (req,res) => {
 app.get('/todos/:id', (req, res) => {
   var id = req.params.id;
 
-  // if(!ObjectID.isValid(id)) {
-  //   console.log('Id not valid');
-  // } else {
-  //   Todo.findById(id).then((todo) => {
-  //     if(!todo) {
-  //       return console.log('Todo not found!');
-  //     } console.log('Todo:', JSON.stringify(todo, undefined, 2));
-  //   }).catch((e) => console.log(e));
-  // }
-
   if(!ObjectID.isValid(id)) {
     res.status(404).send('Id Invalid');
   }
@@ -60,10 +50,25 @@ app.get('/todos/:id', (req, res) => {
           }
     res.send(todo);
   }, (e) => {
-    res.status(400).send()
+    res.status(400).send();
   });
+});
 
-  //validate id -- if not found respond with code 404
+//DELETE /todos/:id
+app.delete('/todos/:id', (req, res) => {
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)) {
+    res.status(404).send('Id Invalid');
+  }
+  Todo.findByIdAndRemove(id).then((todo) => {
+    if(!todo) {
+      return res.status(404).send('ID not found!');
+    }
+    res.status(200).send(`Successfully removed id ${id}`);
+  }, (e) => {
+    res.status(400).send();
+  });
 });
 
 app.listen(activePort, () => {
