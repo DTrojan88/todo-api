@@ -1,4 +1,6 @@
 //library imports
+require('./config/config');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
@@ -14,7 +16,7 @@ var app = express();
 app.use(bodyParser.json());
 
 //active port
-const activePort = process.env.PORT || 3000;
+const activePort = process.env.PORT;
 
 //post route
 app.post('/todos', (req, res) => {
