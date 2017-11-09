@@ -9,6 +9,7 @@ const _ = require('lodash');
 //local imports
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
+var {User} = require('./models/user');
 
 
 var app = express();
@@ -97,6 +98,22 @@ app.patch('/todos/:id', (req, res) => {
   })
 
 });
+
+//POST /users
+app.post('/users', (req, res) => {
+  var body = _.pick(req.body, ['name', 'email', 'password', 'tokens']);
+  console.log(body);
+  var user = new User(body);
+
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }, (e) => {
+    res.status(400).send(e);
+  }).then((token) =>{
+    res.header('x-auth', token).send(user);
+  });
+});
+
 
 app.listen(activePort, () => {
   console.log('Started on port', activePort);
